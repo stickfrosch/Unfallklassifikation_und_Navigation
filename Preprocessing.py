@@ -53,6 +53,8 @@ for col in ['XGCSWGS84', 'YGCSWGS84']:
 
 dataset_merged['FullAGS'] = dataset_merged['ULAND'].astype(str).str.zfill(2) + dataset_merged['UREGBEZ'].astype(str).str.zfill(1) + dataset_merged['UKREIS'].astype(str).str.zfill(2) + dataset_merged['UGEMEINDE'].astype(str).str.zfill(3)
 
+dataset_merged.to_pickle("germany.pkl")
+
 augsburg = dataset_merged[dataset_merged.FullAGS.str.startswith('09761')]
 augsburg = augsburg.drop_duplicates(subset=['OBJECTID'])
 print(augsburg)
