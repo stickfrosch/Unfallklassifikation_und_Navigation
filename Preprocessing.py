@@ -32,6 +32,7 @@ dataset2020 = pd.read_csv("Unfallorte2020_LinRef.csv", delimiter=';', header=Non
 dataset2020 = dataset2020.drop(['UIDENTSTLAE','LINREFX','LINREFY'], axis=1)
 #print(dataset2020.head())
 
+# Einlesen der Wetterdaten und anpassen auf Zeitvariablen des Unfallatlas Datensatz (Jahr, Monat und Wochentag)
 weather = pd.read_csv("weather_data.csv", delimiter=',')
 print(weather.dtypes)
 weather["date"] = pd.to_datetime(weather["date"])
@@ -43,6 +44,7 @@ weather.loc[weather["weekday"] == 8, "weekday"] = 1
 weather = weather.groupby(["year", "month", "weekday"]).mean().reset_index()
 print(weather)
 
+# Mergen der Datensätze
 dataset_merged = pd.concat([dataset2016, dataset2017, dataset2018, dataset2019, dataset2020], sort=False)
 dataset_merged = dataset_merged.reset_index(drop=True)
 
@@ -51,13 +53,14 @@ dataset_merged = dataset_merged.merge(weather, left_on=["UJAHR", "UMONAT", "UWOC
 for col in ['XGCSWGS84', 'YGCSWGS84']:
     dataset_merged[col] = pd.to_numeric(dataset_merged[col].apply(lambda x: re.sub(',', '.', str(x))))
 
+# AGS Spalte erstellen um nach Augsburg zu filtern
 dataset_merged['FullAGS'] = dataset_merged['ULAND'].astype(str).str.zfill(2) + dataset_merged['UREGBEZ'].astype(str).str.zfill(1) + dataset_merged['UKREIS'].astype(str).str.zfill(2) + dataset_merged['UGEMEINDE'].astype(str).str.zfill(3)
-
 dataset_merged.to_pickle("germany.pkl")
 
 augsburg = dataset_merged[dataset_merged.FullAGS.str.startswith('09761')]
 augsburg = augsburg.drop_duplicates(subset=['OBJECTID'])
 print(augsburg)
+# Fertiger Dataframe als Pickle abspeichern für weitere Verarbeitung
 augsburg.to_pickle("bayern.pkl")
 
 
