@@ -47,4 +47,5 @@ augsburg["unfallnodes_bike"] = unfallnodes_bike
 
 print("Unfallknoten für jeweiliges Fortbewegungsmittel berechnet")
 print(augsburg.head())
+augsburg = augsburg.apply(pd.to_numeric, errors='coerce')
 augsburg.to_pickle("augsburg.pkl")
