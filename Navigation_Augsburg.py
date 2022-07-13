@@ -25,8 +25,14 @@ augsburg = pd.read_pickle("augsburg.pkl")
 
 ########## Nutze Nominatim Geocoding Serivce um Adresse in Lat und Lon umzurechnen #############
 locator = Nominatim(user_agent="myGeocoder")
-location = locator.geocode("Rathaus, Augsburg, Germany")
-endlocation = locator.geocode("Bürgeramt, Augsburg, Germany")
+start = input("Geben Sie bitte ihre Start Adresse ein:")
+end = input("Geben Sie bitte ihre Ziel Adresse ein:")
+#location = locator.geocode("Rathaus, Augsburg, Germany")
+#Universität Augsburg, Augsburg, Germany
+#Zoo Augsburg, Augsburg, Germany
+location = locator.geocode(start)
+#endlocation = locator.geocode("Bürgeramt, Augsburg, Germany")
+endlocation = locator.geocode(end)
 
 while True:
     var_mobility_input = input("Geben Sie bitte 1 für Auto, 2 für zu Fuß oder 3 für Fahrrad als ihr Fortbewegungsmittel ein")
@@ -188,11 +194,10 @@ var_Gkfz = 0
 
 input_variablenarray = []
 input_variablenarray.append([var_year, var_month, var_hour, var_weekday, var_light, var_fahrrad, var_auto, var_fuß, var_Krad, var_Gkfz, var_sonstige, var_streetstatus])
-
 prediction_utyp = modelRFC.predict(input_variablenarray)
-print(prediction_utyp)
 prediction_uart = modelRFC_art.predict(input_variablenarray)
-print(prediction_uart)
+#print(prediction_utyp)
+#print(prediction_uart)
 
 while True:
 
@@ -260,10 +265,10 @@ while True:
     break
 
 warning_popup = "Bitte passen Sie besonders auf", prediction_uart, "auf. Zudem ist es sehr wahrscheinlich dass Sie in einen", prediction_utyp, "verwickelt werden könnten."
-warning_popup = str(warning_popup)
+#warning_popup = str(warning_popup)
+print(warning_popup)
 ############ Plotte Route mit Folium auf eine karte und speichere als html ##########
 route_map = ox.plot_route_folium(G, route2, opacity=0.5, color="#cc0000")
-
 for Lon, Lat, idd in zip(Lon, Lat, ids):
     folium.Circle(
             radius=10,
